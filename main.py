@@ -3,22 +3,41 @@ import pyttsx3
 import webbrowser
 import time
 import musicLibrary
+import google.generativeai as genai
 
-# Initialize TTS engine
+# ---------- GEMINI API SETUP ----------
+genai.configure(api_key="YOUR-API-KEY")  # Replace with your Gemini API key
+model = genai.GenerativeModel("gemini-1.5-flash")
+
+# ---------- TTS SETUP ----------
 engine = pyttsx3.init()
 engine.setProperty('rate', 150)
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)  # Try index 1 if no sound
+engine.setProperty('voice', voices[0].id)  # Change index for different voices
 
 def speak(text):
-    # print(f"SPEAKING: {text}")
+    import pyttsx3
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 150)
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[0].id)
     engine.say(text)
     engine.runAndWait()
+    engine.stop()
 
 
+# ---------- GEMINI QUERY ----------
+def ask_gemini(question):
+    try:
+        response = model.generate_content(question)
+        return response.text
+    except Exception as e:
+        return f"Error with Gemini API: {e}"
 
+# ---------- PROCESS COMMAND ----------
 def processCommand(command):
     command = command.lower()
+
     if "open google" in command:
         webbrowser.open("https://google.com")
     elif "open facebook" in command:
@@ -35,8 +54,13 @@ def processCommand(command):
         else:
             speak("Song not found.")
     else:
-        pass
+        # If command doesn't match predefined ones, ask Gemini
+        speak("Let me think...")
+        answer = ask_gemini(command)
+        # print("JoJo:", answer)
+        speak(answer)
 
+# ---------- MAIN FUNCTION ----------
 def main():
     speak("Initializing JoJo...")
     recognizer = sr.Recognizer()
@@ -51,7 +75,7 @@ def main():
 
             if word.lower() == "jojo":
                 print("Jojo detected.")
-                time.sleep(0.1)  # delay for audio device release
+                time.sleep(0.1)  # Small delay
                 speak("Ya")
 
                 with sr.Microphone() as source:
