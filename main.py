@@ -9,14 +9,8 @@ import google.generativeai as genai
 genai.configure(api_key="YOUR-API-KEY")  # Replace with your Gemini API key
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-# ---------- TTS SETUP ----------
-engine = pyttsx3.init()
-engine.setProperty('rate', 150)
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)  # Change index for different voices
 
 def speak(text):
-    import pyttsx3
     engine = pyttsx3.init()
     engine.setProperty('rate', 150)
     voices = engine.getProperty('voices')
