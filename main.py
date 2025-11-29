@@ -5,7 +5,7 @@ import time
 import musicLibrary
 import google.generativeai as genai
 
-# ---------- GEMINI API SETUP ----------
+# gemini
 genai.configure(api_key="YOUR-API-KEY")  # Replace with your Gemini API key
 model = genai.GenerativeModel("gemini-1.5-flash")
 
@@ -20,7 +20,7 @@ def speak(text):
     engine.stop()
 
 
-# ---------- GEMINI QUERY ----------
+#query
 def ask_gemini(question):
     try:
         response = model.generate_content(question)
@@ -28,7 +28,7 @@ def ask_gemini(question):
     except Exception as e:
         return f"Error with Gemini API: {e}"
 
-# ---------- PROCESS COMMAND ----------
+# command
 def processCommand(command):
     command = command.lower()
 
@@ -54,7 +54,6 @@ def processCommand(command):
         # print("JoJo:", answer)
         speak(answer)
 
-# ---------- MAIN FUNCTION ----------
 def main():
     speak("Initializing JoJo...")
     recognizer = sr.Recognizer()
